@@ -8,7 +8,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/akkc01/aks-helm-argocd-deployment.git
+    repoURL: https://github.com/akkc01/theakkcspace-deploy-aks-helm-argocd.git
     targetRevision: main
     path: theakkcspace-helm/email-chart
 
