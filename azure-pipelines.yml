@@ -1,0 +1,40 @@
+name: Deploy-multiple-charts_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
+
+trigger: none
+pool:
+  name: dev-aks-akkc-agent
+
+stages:
+
+# ==========================
+# Test Stage
+- stage: Test
+  displayName: Test Stage
+  jobs:
+  - job: Test
+    displayName: Test Pipeline
+    steps:
+    - checkout: self
+    - script: |
+        echo "Deployment Starting..."
+        ls -R $(Build.SourcesDirectory)
+      displayName: Verify Repository
+
+# ==========================
+# Build Stage
+- stage: Build
+  jobs:
+  - job: Build
+    steps:
+
+      - script: |
+          docker build -t myacr.azurecr.io/main:$(Build.BuildId) .
+          docker push myacr.azurecr.io/main:$(Build.BuildId)
+
+      - script: |
+          sed -i "s/tag:.*/tag: $(Build.BuildId)/" values.yaml
+
+      - script: |
+          git add .
+          git commit -m "Update image tag to $(Build.BuildId)"
+          git push
