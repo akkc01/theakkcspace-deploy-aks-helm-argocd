@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: amitkkc01/akkcsupport
-  tag: 6639cad07c2b7a8dc48694be46653fc9050f23df
+  tag: 11023afa3614d6bf38b7f86922a024b38f875b6c
   pullPolicy: Always
 container:
   name: support-app
@@ -21,10 +21,9 @@ configMap:
 service:
   type: ClusterIP
   port: 80
-
 ingress:
   enabled: true
   className: nginx
-  host: support.theakkc.space  # your domain
+  host: support.theakkc.space # your domain
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /

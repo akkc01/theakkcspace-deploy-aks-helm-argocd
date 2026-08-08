@@ -1,14 +1,11 @@
 replicaCount: 1
-
 image:
   repository: amitkkc01/akkcemail
-  tag: 6639cad07c2b7a8dc48694be46653fc9050f23df
+  tag: 11023afa3614d6bf38b7f86922a024b38f875b6c
   pullPolicy: Always
-
 container:
   name: email-app
   port: 80
-
 resources:
   requests:
     cpu: "100m"
@@ -16,23 +13,17 @@ resources:
   limits:
     cpu: "500m"
     memory: "256Mi"
-
 volume:
   name: email-html
   mountPath: /usr/share/nginx/html
-
 configMap:
   suffix: configmap
-
 service:
   type: ClusterIP
   port: 80
-
-
-
 ingress:
   enabled: true
   className: nginx
-  host: email.theakkc.space  # your domain
+  host: email.theakkc.space # your domain
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
