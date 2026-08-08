@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: amitkkc01/akkcemail
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 container:
   name: email-app
