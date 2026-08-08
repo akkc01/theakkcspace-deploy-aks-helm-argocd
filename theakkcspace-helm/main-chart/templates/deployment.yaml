@@ -30,11 +30,3 @@ spec:
           resources:
 {{ toYaml .Values.resources | indent 12 }}
 
-          volumeMounts:
-            - name: {{ .Values.volume.name }}
-              mountPath: {{ .Values.volume.mountPath }}
-
-      volumes:
-        - name: {{ .Values.volume.name }}
-          configMap:
-            name: {{ .Release.Name }}-{{ .Values.configMap.suffix }}
