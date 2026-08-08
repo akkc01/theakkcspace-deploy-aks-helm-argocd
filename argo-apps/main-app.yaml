@@ -1,13 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: Main-App
+  name: main-app
+  namespace: argocd   # important
   
 spec:
   project: default
 
   source:
-    repoURL: https://github.com/akkc01/aks-helm-argocd-deployment.git
+    repoURL: https://github.com/akkc01/theakkcspace-deploy-aks-helm-argocd.git
     targetRevision: main
     path: theakkcspace-helm/main-chart
 

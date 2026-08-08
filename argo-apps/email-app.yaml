@@ -1,8 +1,9 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: Email-App
-  
+  name: email-app
+  namespace: argocd   # important
+
 spec:
   project: default
 
@@ -19,4 +20,3 @@ spec:
     automated:
       prune: true
       selfHeal: true
-

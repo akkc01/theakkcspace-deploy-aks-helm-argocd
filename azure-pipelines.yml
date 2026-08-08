@@ -4,6 +4,12 @@ trigger: none
 pool:
   name: dev-aks-akkc-agent
 
+variables:
+  azureServiceConnection: 'Azure-SP'
+  resourceGroup: 'aks-rg'
+  aksCluster: 'aks-cluster'
+  namespace: 'dev'
+
 stages:
 
 # ==========================
@@ -20,21 +26,70 @@ stages:
         ls -R $(Build.SourcesDirectory)
       displayName: Verify Repository
 
-# ==========================
-# Build Stage
-- stage: Build
+
+# Deploy Stage
+# =========================
+- stage: Deploy
+  displayName: Deploy to AKS
+
   jobs:
-  - job: Build
+  - job: HelmDeploy
+    displayName: Helm Deployment
     steps:
 
-      - script: |
-          docker build -t myacr.azurecr.io/main:$(Build.BuildId) .
-          docker push myacr.azurecr.io/main:$(Build.BuildId)
+    # Checkout Helm repo
+    - checkout: git://akkc01/theakkcspace-deploy-aks-helm-argocd
 
-      - script: |
-          sed -i "s/tag:.*/tag: $(Build.BuildId)/" values.yaml
+    # Login to AKS
+    - task: AzureCLI@2
+      displayName: Login to AKS
+      inputs:
+        azureSubscription: $(azureServiceConnection)
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az aks get-credentials \
+            --resource-group $(resourceGroup) \
+            --name $(aksCluster) \
+            --overwrite-existing
 
-      - script: |
-          git add .
-          git commit -m "Update image tag to $(Build.BuildId)"
-          git push
+    # Install Helm
+    - task: HelmInstaller@1
+      inputs:
+        helmVersionToInstall: 'latest'
+
+    # Deploy Main Chart
+    - task: HelmDeploy@0
+      displayName: Deploy Main Service
+      inputs:
+        connectionType: 'None'
+        namespace: $(namespace)
+        command: upgrade
+        chartType: FilePath
+        chartPath: theakkcspace-helm/main-chart
+        releaseName: main-release
+        install: true
+
+    # Deploy Support Chart
+    - task: HelmDeploy@0
+      displayName: Deploy Support Service
+      inputs:
+        connectionType: 'None'
+        namespace: $(namespace)
+        command: upgrade
+        chartType: FilePath
+        chartPath: theakkcspace-helm/support-chart
+        releaseName: support-release
+        install: true
+
+    # Deploy Email Chart
+    - task: HelmDeploy@0
+      displayName: Deploy Email Service
+      inputs:
+        connectionType: 'None'
+        namespace: $(namespace)
+        command: upgrade
+        chartType: FilePath
+        chartPath: theakkcspace-helm/email-chart
+        releaseName: email-release
+        install: true
