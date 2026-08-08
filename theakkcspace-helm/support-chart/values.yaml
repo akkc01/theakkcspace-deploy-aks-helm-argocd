@@ -21,9 +21,10 @@ configMap:
 service:
   type: ClusterIP
   port: 80
+
 ingress:
   enabled: true
   className: nginx
+  host: support.theakkc.space  # your domain
   annotations:
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+    nginx.ingress.kubernetes.io/rewrite-target: /
