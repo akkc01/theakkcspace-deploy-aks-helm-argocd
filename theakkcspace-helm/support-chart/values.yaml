@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: amitkkc01/akkcsupport
-  tag: 11023afa3614d6bf38b7f86922a024b38f875b6c
+  tag: 03618da7d88e1664d1d3f3b4e4d0cb7b77e25a2c
   pullPolicy: Always
 container:
   name: support-app
