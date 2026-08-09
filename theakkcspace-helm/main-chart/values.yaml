@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: amitkkc01/akkcmain
-  tag: 03618da7d88e1664d1d3f3b4e4d0cb7b77e25a2c
+  tag: 6d17b1550b663d6050b87a42c45e755b5334bb16
   pullPolicy: Always
 container:
   name: main-app-container
